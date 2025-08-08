@@ -220,15 +220,22 @@ function downloadFile(fileId) {
     }
 }
 
-// Delete file
 function deleteFile(fileId) {
     if (confirm('Are you sure you want to delete this file?')) {
-        userFiles[currentUser.email] = userFiles[currentUser.email].filter(f => f.id !== fileId);
-        localStorage.setItem('userFiles', JSON.stringify(userFiles));
-        showMessage('File deleted successfully!', 'success');
-        displayFiles();
+        // Reload userFiles from localStorage to avoid stale data
+        userFiles = JSON.parse(localStorage.getItem('userFiles') || '{}');
+
+        if (userFiles[currentUser.email]) {
+            userFiles[currentUser.email] = userFiles[currentUser.email].filter(f => f.id !== fileId);
+            localStorage.setItem('userFiles', JSON.stringify(userFiles));
+            showMessage('File deleted successfully!', 'success');
+            displayFiles();
+        } else {
+            showMessage('No files found for current user.', 'error');
+        }
     }
 }
+
 
 // Logout user
 function logout() {
