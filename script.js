@@ -15,6 +15,9 @@ function setupEventListeners() {
     document.getElementById('registerFormElement').addEventListener('submit', handleRegister);
     document.getElementById('fileUploadForm').addEventListener('submit', handleFileUpload);
     document.getElementById('searchInput').addEventListener('input', displayFiles);
+
+    // Sorting dropdown event listener
+    document.getElementById('sortSelect').addEventListener('change', displayFiles);
 }
 
 // Check if user is already logged in
@@ -135,17 +138,33 @@ function showFileSection() {
     displayFiles();
 }
 
-// Display user's files
+// Display user's files with sorting & filtering
 function displayFiles() {
     const searchInput = document.getElementById('searchInput');
     const filter = searchInput.value.toLowerCase();
     const filesContainer = document.getElementById('filesContainer');
     const files = userFiles[currentUser.email] || [];
 
-    const filteredFiles = files.filter(file => {
+    // Filter files based on search input
+    let filteredFiles = files.filter(file => {
         return file.name.toLowerCase().includes(filter) ||
                file.originalName.toLowerCase().includes(filter) ||
                formatDate(file.uploadDate).toLowerCase().includes(filter);
+    });
+
+    // Get sorting criteria from dropdown
+    const sortValue = document.getElementById('sortSelect').value;
+
+    // Sort filtered files
+    filteredFiles.sort((a, b) => {
+        if (sortValue === 'name') {
+            return a.name.localeCompare(b.name);
+        } else if (sortValue === 'size') {
+            return a.size - b.size;
+        } else if (sortValue === 'date') {
+            return new Date(b.uploadDate) - new Date(a.uploadDate);
+        }
+        return 0;
     });
 
     if (filteredFiles.length === 0) {

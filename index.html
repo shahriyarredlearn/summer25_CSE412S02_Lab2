@@ -80,9 +80,18 @@
 
             <button class="btn logout-btn" onclick="logout()">Logout</button>
 
-            <!-- 🔍 Search Bar -->
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search by name, type, or date...">
+            <!-- 🔍 Search and Sort -->
+            <div class="search-sort-container" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin: 20px 0;">
+                <!-- Search Bar -->
+                <input type="text" id="searchInput" placeholder="Search by name, type, or date..." style="flex: 1; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+
+                <!-- Sort Dropdown -->
+                <select id="sortSelect" onchange="displayFiles()" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                    <option value="name">Name (A-Z)</option>
+                    <option value="date">Upload Date (Newest)</option>
+                    <option value="size">Size (Largest First)</option>
+                    <option value="type">Type (A-Z)</option>
+                </select>
             </div>
 
             <!-- File List -->
