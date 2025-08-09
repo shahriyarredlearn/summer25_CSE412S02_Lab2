@@ -10,3 +10,53 @@ For anyone who has access to this Repository, please create your folder using th
 
 shahriyar_databasecode_v1
 
+
+# 📁 Advanced File Manager Features
+
+A modern file management interface with advanced functionalities to enhance user experience and control.
+
+---
+
+## 🔍 Search / Filter Files
+Easily find files by:
+- Name
+- Type
+- Upload Date
+
+Includes a responsive search bar for instant filtering.
+
+---
+
+## 📊 Download Counter
+Track file popularity with a visible **download count** for each file.
+
+---
+
+## ↕️ Sort Files
+Sort files dynamically by:
+- Name (A–Z)
+- Upload Date (Newest First)
+- Size (Largest First)
+- Type (e.g., PDF, Image, Video)
+
+---
+
+## 🖱️ Drag & Drop Upload
+Upload files effortlessly:
+- Drag files into the drop zone
+- Automatically triggers the upload process
+
+---
+
+## ⏳ Upload Progress Bar
+Visual feedback with a real-time **progress bar**:
+- Shows percentage uploaded
+- Enhances user experience during large file uploads
+
+<img width="1873" height="792" alt="image" src="https://github.com/user-attachments/assets/c24c9eab-da57-4d66-a025-6bd88ae04cfe" />
+<img width="726" height="627" alt="image" src="https://github.com/user-attachments/assets/0ff69181-6264-4f6b-af1a-c814b1f38136" />
+
+
+
+
+
