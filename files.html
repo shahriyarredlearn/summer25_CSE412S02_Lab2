@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Files</title>
+  <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>My Files</h1>
+      <p id="welcomeMessage">Welcome!</p>
+    </div>
+
+    <div id="messageContainer"></div>
+
+    <div class="row" style="margin-bottom:10px">
+      <input type="text" id="searchInput" placeholder="Search by name/date" style="flex:1" />
+      <select id="sortSelect">
+        <option value="date">Date (newest)</option>
+        <option value="name">Name (A → Z)</option>
+        <option value="size">Size (largest)</option>
+        <option value="type">Type</option>
+      </select>
+    </div>
+
+    <div id="filesContainer"></div>
+
+    <div class="row" style="margin-top:10px">
+      <a href="./upload.html" class="btn">Back to Upload</a>
+      <button class="btn logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
