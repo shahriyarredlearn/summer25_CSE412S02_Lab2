@@ -1,0 +1,26 @@
+/* About File Manager Layout */
+.page-header { padding: 48px 0 24px; background: var(--surface-2); text-align: center; }
+.page-header h1 { margin: 0 0 10px; font-size: 2rem; }
+
+.file-manager { padding: 48px 0; }
+.file-grid { display: grid; grid-template-columns: 260px 1fr; gap: 24px; }
+
+.sidebar { background: var(--surface); border-radius: var(--radius); padding: 18px; box-shadow: 0 14px 36px -16px var(--shadow); }
+.sidebar-title { margin: 0 0 12px; font-size: 1rem; font-weight: 600; }
+.sidebar-menu { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.sidebar-menu a { display: block; padding: 10px 14px; border-radius: 10px; color: inherit; text-decoration: none; transition: background .2s; }
+.sidebar-menu a:hover { background: rgba(255,255,255,.06); }
+.sidebar-menu a.active { background: var(--brand); color: white; }
+
+.file-panel { background: var(--surface); border-radius: var(--radius); padding: 18px; box-shadow: 0 18px 40px -20px var(--shadow); display: grid; gap: 20px; }
+.file-toolbar { display: flex; gap: 10px; justify-content: flex-end; }
+.file-toolbar input { flex: 1; padding: 10px 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; background: var(--surface-2); color: var(--fg); }
+
+.file-content { display: grid; gap: 18px; }
+.file-content .card { padding: 18px; border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); background: var(--surface-2); }
+.file-content .card h3 { margin-top: 0; }
+
+@media (max-width: 900px) {
+  .file-grid { grid-template-columns: 1fr; }
+  .sidebar { order: -1; }
+}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}MySite — About{% endblock %}
+{% block meta_description %}Learn more about our File Manager style About page.{% endblock %}
+
+{% block content %}
+  <section class="page-header">
+    <div class="container">
+      <h1>About Us</h1>
+      <p class="lead">Your professional file management companion — organized, fast, and secure.</p>
+    </div>
+  </section>
+
+  <section class="file-manager">
+    <div class="container file-grid">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h2 class="sidebar-title">Navigation</h2>
+        <ul class="sidebar-menu">
+          <li><a href="/">🏠 Home</a></li>
+          <li><a href="/about/" class="active">📂 About</a></li>
+          <li><a href="#team">👥 Our Team</a></li>
+          <li><a href="#mission">🎯 Mission</a></li>
+          <li><a href="#history">📜 History</a></li>
+        </ul>
+      </aside>
+
+      <!-- Main Panel -->
+      <div class="file-panel">
+        <div class="file-toolbar">
+          <input type="search" placeholder="Search About content..." id="aboutSearch">
+          <button class="btn btn-sm btn-primary">Search</button>
+        </div>
+
+        <div class="file-content">
+          <article id="team" class="card">
+            <h3>👥 Our Team</h3>
+            <p>We are a group of passionate developers and designers building tools that make file management effortless.</p>
+          </article>
+
+          <article id="mission" class="card">
+            <h3>🎯 Mission</h3>
+            <p>Our mission is to deliver secure, reliable, and intuitive solutions for managing your files anywhere, anytime.</p>
+          </article>
+
+          <article id="history" class="card">
+            <h3>📜 History</h3>
+            <p>Founded in 2024, we’ve grown rapidly to serve thousands of users worldwide with professional-grade file tools.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
