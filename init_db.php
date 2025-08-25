@@ -1,22 +1,23 @@
 <?php
 // config/init_db.php
-require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/app.php'; // uses db(), json_response(), log_error()
 
 try {
     $pdo = db();
 
-    // users
-    $pdo->exec("""
+    // ✅ Users table
+    $pdo->exec(<<<SQL
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
             email VARCHAR(255) NOT NULL UNIQUE,
             password_hash VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-    """);
+    SQL
+    );
 
-    // user_files
-    $pdo->exec("""
+    // ✅ User files table
+    $pdo->exec(<<<SQL
         CREATE TABLE IF NOT EXISTS user_files (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_email VARCHAR(255) NOT NULL,
@@ -27,12 +28,13 @@ try {
             upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             INDEX(user_email)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-    """);
+    SQL
+    );
 
-    header('Content-Type: text/plain');
-    echo "✅ Database tables ensured.\n";
+    // Optional: return JSON
+    json_response(true, ['message' => 'Database tables ensured']);
+
 } catch (Throwable $e) {
-    http_response_code(500);
-    header('Content-Type: text/plain');
-    echo "❌ Failed: " . $e->getMessage() . "\n";
+    log_error("DB Init Error: " . $e->getMessage());
+    json_response(false, ['error' => 'Database initialization failed'], 500);
 }
