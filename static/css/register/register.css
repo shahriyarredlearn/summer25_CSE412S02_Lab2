@@ -1,81 +1,178 @@
-body {
+/* Reset */
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-.register-container {
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  width: 350px;
-  text-align: center;
-}
-
-h1 {
-  margin-bottom: 20px;
+body {
+  background: #f5f6fa;
   color: #333;
 }
 
-.form-group {
-  margin-bottom: 15px;
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #007bff, #6a11cb);
+  padding: 15px 40px;
+  color: white;
+}
+
+.navbar .logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  transition: 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links .active {
+  font-weight: bold;
+  border-bottom: 2px solid white;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Register Section */
+.register-container {
+  text-align: center;
+  padding: 50px 20px;
+  background: linear-gradient(90deg, #007bff, #6a11cb);
+  color: white;
+}
+
+.register-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.register-container .subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* Register Card */
+.register-card {
+  max-width: 450px;
+  background: white;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   text-align: left;
 }
 
-label {
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
+.register-card h2 {
+  color: #007bff;
+  text-align: center;
 }
 
-input {
+.register-card .subtitle {
+  color: #666;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Form Fields */
+.form-group {
+  position: relative;
+  margin: 20px 0;
+}
+
+.form-group input {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 12px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
   outline: none;
   transition: 0.3s;
 }
 
-input:focus {
-  border-color: #2575fc;
-  box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+.form-group input:focus {
+  border-color: #6a11cb;
+  box-shadow: 0 0 8px rgba(106, 17, 203, 0.3);
 }
 
-.btn {
-  width: 100%;
-  background: #2575fc;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
+.form-group label {
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  font-size: 12px;
+  background: white;
+  padding: 0 5px;
+  color: #6a11cb;
+}
+
+/* Password toggle */
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 35%;
   cursor: pointer;
+  font-size: 18px;
+  color: #888;
+}
+
+/* Button */
+.btn {
+  background: linear-gradient(90deg, #007bff, #6a11cb);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  width: 100%;
+  border-radius: 8px;
   font-size: 16px;
-  margin-top: 10px;
-  transition: background 0.3s;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .btn:hover {
-  background: #1b5fd9;
+  opacity: 0.9;
 }
 
-.login-text {
+/* Login Link */
+.login-link {
+  text-align: center;
   margin-top: 15px;
   font-size: 14px;
 }
 
-.login-text a {
-  color: #2575fc;
-  text-decoration: none;
+.login-link a {
+  color: #6a11cb;
   font-weight: bold;
+  text-decoration: none;
 }
 
-.login-text a:hover {
+.login-link a:hover {
   text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  background: #111;
+  color: #aaa;
+  padding: 15px;
+  margin-top: 40px;
 }

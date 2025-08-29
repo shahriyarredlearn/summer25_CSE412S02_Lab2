@@ -1,12 +1,22 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("form");
-    const username = document.getElementById("username");
-    const password = document.getElementById("password");
+document.addEventListener("DOMContentLoaded", () => {
+  const togglePassword = document.querySelector(".toggle-password");
+  const passwordInput = document.querySelector("#password");
 
-    form.addEventListener("submit", function (e) {
-        if (username.value.trim() === "" || password.value.trim() === "") {
-            e.preventDefault();
-            alert("Please fill in all fields!");
-        }
-    });
+  togglePassword.addEventListener("click", () => {
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      togglePassword.textContent = "🙈";
+    } else {
+      passwordInput.type = "password";
+      togglePassword.textContent = "👁️";
+    }
+  });
+
+  // Mobile navbar toggle
+  const menuToggle = document.querySelector(".menu-toggle");
+  const navLinks = document.querySelector(".nav-links");
+
+  menuToggle.addEventListener("click", () => {
+    navLinks.classList.toggle("show");
+  });
 });

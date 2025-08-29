@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MySite{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">🌐 MySite</div>
+      <ul class="nav-links">
+        <li><a href="/" class="{% block home_active %}{% endblock %}">Home</a></li>
+        <li><a href="/About/" class="{% block about_active %}{% endblock %}">About</a></li>
+        <li><a href="/login/" class="{% block login_active %}{% endblock %}">Login</a></li>
+        <li><a href="/Register/" class="{% block register_active %}{% endblock %}">Register</a></li>
+        <li><a href="/upload/" class="{% block upload_active %}{% endblock %}">Upload</a></li>
+        <li><a href="/files/" class="{% block files_active %}{% endblock %}">Files</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Page Content -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Django Project | All Rights Reserved</p>
+  </footer>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

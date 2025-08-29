@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpRequest
-def home(request):
-   
-    return render(request, 'about/about.html')
+
+def about_view(request):
+    return render(request, "about/about.html")

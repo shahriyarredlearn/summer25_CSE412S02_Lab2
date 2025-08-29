@@ -1,53 +1,75 @@
-{% extends 'base.html' %}
-{% block title %}MySite — About{% endblock %}
-{% block meta_description %}Learn more about our File Manager style About page.{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - MySite</title>
+  {% load static %}
 
-{% block content %}
-  <section class="page-header">
-    <div class="container">
-      <h1>About Us</h1>
-      <p class="lead">Your professional file management companion — organized, fast, and secure.</p>
-    </div>
+
+<link rel="stylesheet" href="{% static 'css/about/about.css' %}">
+
+
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">🌐 MySite</div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/About/">About</a></li>
+        <li><a href="/login/">Login</a></li>
+        <li><a href="/Register/">Register</a></li>
+        <li><a href="/upload/">Upload</a></li>
+        <li><a href="/files/">Files</a></li>
+      </ul>
+      <button class="menu-toggle">☰</button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>About Us</h1>
+    <p>Learn more about our mission, vision, and services.</p>
   </section>
 
-  <section class="file-manager">
-    <div class="container file-grid">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <h2 class="sidebar-title">Navigation</h2>
-        <ul class="sidebar-menu">
-          <li><a href="/">🏠 Home</a></li>
-          <li><a href="/about/" class="active">📂 About</a></li>
-          <li><a href="#team">👥 Our Team</a></li>
-          <li><a href="#mission">🎯 Mission</a></li>
-          <li><a href="#history">📜 History</a></li>
-        </ul>
-      </aside>
+  <!-- About Content -->
+  <main class="container">
+    <section class="about-card">
+      <h2>Who We Are</h2>
+      <p>
+        MySite is a modern platform built with Django that helps users securely 
+        register, log in, upload files, and access them anytime. 
+        Our mission is to provide simplicity and efficiency in file management.
+      </p>
+    </section>
 
-      <!-- Main Panel -->
-      <div class="file-panel">
-        <div class="file-toolbar">
-          <input type="search" placeholder="Search About content..." id="aboutSearch">
-          <button class="btn btn-sm btn-primary">Search</button>
-        </div>
+    <section class="about-card">
+      <h2>Our Vision</h2>
+      <p>
+        We aim to create a user-friendly digital environment where 
+        data handling is safe, easy, and accessible for everyone.
+      </p>
+    </section>
 
-        <div class="file-content">
-          <article id="team" class="card">
-            <h3>👥 Our Team</h3>
-            <p>We are a group of passionate developers and designers building tools that make file management effortless.</p>
-          </article>
+    <section class="about-card">
+      <h2>Why Choose Us?</h2>
+      <ul>
+        <li>🔒 Secure authentication</li>
+        <li>⚡ Fast file uploads</li>
+        <li>🌍 Accessible anytime, anywhere</li>
+        <li>📂 Organized file management</li>
+      </ul>
+    </section>
+  </main>
 
-          <article id="mission" class="card">
-            <h3>🎯 Mission</h3>
-            <p>Our mission is to deliver secure, reliable, and intuitive solutions for managing your files anywhere, anytime.</p>
-          </article>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Django Project | All Rights Reserved</p>
+  </footer>
 
-          <article id="history" class="card">
-            <h3>📜 History</h3>
-            <p>Founded in 2024, we’ve grown rapidly to serve thousands of users worldwide with professional-grade file tools.</p>
-          </article>
-        </div>
-      </div>
-    </div>
-  </section>
-{% endblock %}
+<script src="{% static 'JS/upload/upload.js' %}"></script>
+
+</body>
+</html>

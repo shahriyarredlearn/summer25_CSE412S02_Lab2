@@ -1,0 +1,166 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: #f5f6fa;
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #007bff, #6a11cb);
+  padding: 15px 40px;
+  color: white;
+}
+
+.navbar .logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  transition: 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links .active {
+  font-weight: bold;
+  border-bottom: 2px solid white;
+}
+
+/* Files Section */
+.files-container {
+  text-align: center;
+  padding: 50px 20px;
+  background: linear-gradient(90deg, #007bff, #6a11cb);
+  color: white;
+}
+
+.files-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+/* Files Card */
+.files-card {
+  max-width: 600px;
+  background: white;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.files-card h2 {
+  color: #007bff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Messages */
+.success-message {
+  color: green;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.no-files {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+}
+
+/* File List */
+.files-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.files-card li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.files-card li:last-child {
+  border-bottom: none;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-info a {
+  text-decoration: none;
+  color: #6a11cb;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.file-info a:hover {
+  color: #007bff;
+}
+
+.file-info span {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Delete Button */
+.delete-btn {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.delete-btn:hover {
+  background: #cc0000;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  background: #111;
+  color: #aaa;
+  padding: 15px;
+  margin-top: 40px;
+}
+.file-group {
+  margin-bottom: 25px;
+}
+
+.file-group h3 {
+  background: linear-gradient(90deg, #007bff, #6a11cb);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload - MySite</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/upload/upload.css' %}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">🌐 MySite</div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/About/">About</a></li>
+        <li><a href="/login/">Login</a></li>
+        <li><a href="/Register/">Register</a></li>
+        <li><a href="/upload/" class="active">Upload</a></li>
+        <li><a href="/files/">Files</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="upload-container">
+    <!-- Upload Form -->
+    <form class="upload-card" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h2>Upload Your File</h2>
+      <p class="subtitle">Easily upload and manage your files</p>
+
+      <!-- File input -->
+      <div class="form-group file-input">
+        <input type="file" name="file" id="file" required>
+        <label for="file" class="file-label">Select File</label>
+        <span class="file-name" id="file-name">No file chosen</span>
+      </div>
+
+      <!-- File title -->
+      <div class="form-group">
+        <input type="text" name="title" id="title" placeholder=" ">
+        <label for="title">File Title</label>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <textarea name="description" id="description" rows="3" placeholder=" "></textarea>
+        <label for="description">Description (optional)</label>
+      </div>
+
+      <button type="submit" class="btn">Upload</button>
+
+      {% if message %}
+        <p class="success-message">{{ message }}</p>
+      {% endif %}
+    </form>
+
+    <!-- Uploaded files list (separate forms, outside upload form) -->
+    {% if uploaded_files %}
+      <div class="uploaded-files-card">
+        <h3>Uploaded Files</h3>
+        <ul>
+          {% for file in uploaded_files %}
+            <li>
+              <div class="file-info">
+                <a href="{{ MEDIA_URL }}{{ file }}" target="_blank">{{ file }}</a>
+              </div>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="delete_file" value="{{ file }}">
+                <button type="submit" class="delete-btn">Delete</button>
+              </form>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </main>
+
+ <footer style="background:#0d6efd; color:#fff; text-align:center; padding:1rem 0; margin-top:auto;">
+    <p>&copy; 2025 Django Project | All Rights Reserved</p>
+  </footer>
+</body>
+</html>

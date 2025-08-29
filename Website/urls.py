@@ -1,14 +1,16 @@
 from django.contrib import admin
 from django.urls import path, include
+from . import views   # ✅ project-level views import করা হলো
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("", views.home_view, name="home"),   # ✅ Home page এখানে সেট করা হলো
     path('About/', include('About.urls')),
-    path('files/', include('files.urls')),
+    #path('Register/', include('Register.urls')),
     path('login/', include('login.urls')),
-    path('upload/', include('upload.urls')),  # fixed typo here
-    path('register/', include('Register.urls')),
-    
-    # Optional: homepage route, if you want it to go to upload_home
-    # path('', include('upload.urls')),  # you can uncomment if homepage is upload
+    path('upload/', include('upload.urls')),
+    path('files/', include('files.urls')),
+    path('Register/', include('Register.urls')),
+
 ]

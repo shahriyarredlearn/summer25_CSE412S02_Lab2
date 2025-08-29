@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Files - MySite</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/files/files.css' %}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">🌐 MySite</div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/About/">About</a></li>
+        <li><a href="/login/">Login</a></li>
+        <li><a href="/Register/">Register</a></li>
+        <li><a href="/upload/">Upload</a></li>
+        <li><a href="/files/" class="active">Files</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="files-container">
+    <div class="files-card">
+      <h2>Uploaded Files</h2>
+
+      {% if message %}
+        <p class="success-message">{{ message }}</p>
+      {% endif %}
+
+      {% if uploaded_files %}
+        {% regroup uploaded_files by name.0 as grouped_files %}
+        {% for group in grouped_files %}
+          <div class="file-group">
+            <h3>{{ group.grouper|upper }}</h3>
+            <ul>
+              {% for file in group.list %}
+                <li>
+                  <div class="file-info">
+                    <a href="{{ file.url }}" target="_blank">{{ file.name }}</a>
+                    <span>{{ file.size }} KB</span>
+                  </div>
+                  <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="delete_file" value="{{ file.name }}">
+                    <button type="submit" class="delete-btn">Delete</button>
+                  </form>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-files">No files uploaded yet.</p>
+      {% endif %}
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Django Project | All Rights Reserved</p>
+  </footer>
+</body>
+</html>
