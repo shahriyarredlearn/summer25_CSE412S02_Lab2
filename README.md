@@ -66,7 +66,7 @@ The diagrams were created with **draw.io** (source files included).
 ![Component Diagram](./diagrams/Component_diagram.png)
 <small>Figure 1: Component Diagram (created using draw.io)</small>
 
-[Download Component_diagram.drawio (editable source)](./diagrams/UML_Componect_Diagram.drawio)
+[Download Component_diagram.drawio (editable source)](./diagrams/UML_Component_Diagram.drawio)
 
 ---
 
