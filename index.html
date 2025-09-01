@@ -57,26 +57,25 @@
       margin-top: 10px;
     }
     .btn {
-      padding: 8px 14px;
+      padding: 8px 16px;
+      background: #4a6cf7;
+      color: white;
       border: none;
       border-radius: 6px;
-      background: #4a90e2;
-      color: white;
       cursor: pointer;
       font-weight: 600;
-      transition: background 0.2s;
-      text-decoration: none;
-      text-align: center;
+      transition: all 0.2s;
     }
     .btn:hover {
-      background: #357ab8;
+      background: #3a5ce5;
     }
     .logout-btn {
-      background: #e94e4e;
+      background: #f44336;
     }
     #messageContainer {
-      font-weight: 600;
-      margin-bottom: 10px;
+      margin: 15px 0;
+      padding: 10px;
+      border-radius: 6px;
     }
     .success-msg { color: green; }
     .error-msg { color: red; }
@@ -86,9 +85,9 @@
       display: none;
     }
     a {
-      color: #4a90e2;
+      color: #4a6cf7;
+      cursor: pointer;
       text-decoration: none;
-      font-size: 14px;
     }
     a:hover {
       text-decoration: underline;
@@ -98,8 +97,8 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Welcome to File Repository</h1>
-      <p>Sign in or create your account.</p>
+      <h1>File Repository</h1>
+      <p>Login or create an account to manage your files</p>
     </div>
 
     <!-- ✅ Messages -->
@@ -107,41 +106,40 @@
 
     <div class="grid">
       <!-- Login Form -->
-      <div id="loginForm">
-        <h3>Login</h3>
-        <form id="loginFormElement">
-          <label>Email</label>
-          <input type="email" id="loginEmail" required />
-          <label>Password</label>
-          <input type="password" id="loginPassword" required minlength="6" />
+      <form id="loginForm">
+        <div>
+          <h2>Login</h2>
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required placeholder="your@email.com">
+          
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required placeholder="Your password">
+          
           <div class="row">
             <button type="submit" class="btn">Login</button>
-            <a class="btn" href="./upload.html">Skip to Upload</a>
           </div>
-        </form>
-        <div class="row">
-          <a href="#" onclick="toggleAuth();return false;">New here? Create an account</a>
+          
+          <p>Don't have an account? <a onclick="toggleAuth()">Register</a></p>
         </div>
-      </div>
-
+      </form>
+      
       <!-- Register Form -->
-      <div id="registerForm" class="hidden">
-        <h3>Create Account</h3>
-        <form id="registerFormElement">
-          <label>Email</label>
-          <input type="email" id="registerEmail" required />
-          <label>Password</label>
-          <input type="password" id="registerPassword" required minlength="6" />
-          <label>Confirm Password</label>
-          <input type="password" id="confirmPassword" required minlength="6" />
+      <form id="registerForm" class="hidden">
+        <div>
+          <h2>Register</h2>
+          <label for="registerEmail">Email</label>
+          <input type="email" id="registerEmail" required placeholder="your@email.com">
+          
+          <label for="registerPassword">Password</label>
+          <input type="password" id="registerPassword" required placeholder="Choose a password">
+          
           <div class="row">
-            <button type="submit" class="btn">Create Account</button>
+            <button type="submit" class="btn">Register</button>
           </div>
-        </form>
-        <div class="row">
-          <a href="#" onclick="toggleAuth();return false;">Already have an account? Sign in here</a>
+          
+          <p>Already have an account? <a onclick="toggleAuth()">Login</a></p>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 
@@ -158,59 +156,83 @@
     }
 
     function showMessage(msg, type = 'success') {
-      messageContainer.innerHTML = `<span class="${type}-msg">${msg}</span>`;
+      messageContainer.innerHTML = `<div class="${type}-msg">${msg}</div>`;
     }
 
-    // Example: handle login/register with fetch API
-    document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
+    // Login form handler
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
 
       try {
-        const res = await fetch('/api/login.php', {
+        console.log('Sending login request...');
+        const res = await fetch('./login.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
         });
+        
+        console.log('Response received:', res);
+        if (!res.ok) {
+          throw new Error(`HTTP error ${res.status}`);
+        }
+        
         const data = await res.json();
-        if (data.ok) {
-          showMessage('Login successful!', 'success');
-          setTimeout(() => window.location.href = './files.html', 1000);
+        console.log('Parsed data:', data);
+        
+        if (data.ok || data.success) {
+          showMessage('Login successful! Redirecting...', 'success');
+          
+          // Store login info in localStorage/sessionStorage
+          localStorage.setItem('userEmail', data.email || email);
+          localStorage.setItem('userRole', data.role || 'user');
+          
+          // Redirect after a longer delay
+          setTimeout(() => {
+            console.log('Redirecting to files.html...');
+            window.location.href = './files.html';
+          }, 2000); // Increased to 2 seconds
         } else {
           showMessage(data.error || 'Login failed', 'error');
         }
       } catch (err) {
-        showMessage('Network error', 'error');
+        console.error('Error details:', err);
+        showMessage(`Network error: ${err.message}`, 'error');
       }
     });
 
-    document.getElementById('registerFormElement').addEventListener('submit', async (e) => {
+    // Register form handler
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('registerEmail').value;
       const password = document.getElementById('registerPassword').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
-      if (password !== confirmPassword) {
-        showMessage('Passwords do not match', 'error');
-        return;
-      }
 
       try {
-        const res = await fetch('/api/register.php', {
+        console.log('Sending registration request...');
+        const res = await fetch('./register.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
         });
+        
+        console.log('Response received:', res);
+        if (!res.ok) {
+          throw new Error(`HTTP error ${res.status}`);
+        }
+        
         const data = await res.json();
-        if (data.ok) {
-          showMessage('Account created successfully!', 'success');
-          setTimeout(toggleAuth, 1000);
+        console.log('Parsed data:', data);
+        
+        if (data.ok || data.success) {
+          showMessage('Registration successful! You can now log in.', 'success');
+          toggleAuth(); // Switch to login form
         } else {
           showMessage(data.error || 'Registration failed', 'error');
         }
       } catch (err) {
-        showMessage('Network error', 'error');
+        console.error('Error details:', err);
+        showMessage(`Network error: ${err.message}`, 'error');
       }
     });
   </script>
