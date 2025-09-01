@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="./style.css"/>
+
+  <!-- Modern font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #333;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      font-weight: 600;
+    }
+    .tab.active {
+      border-bottom: 2px solid #4a6cf7;
+      color: #4a6cf7;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+    }
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background-color: #4a6cf7;
+      color: white;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+    }
+    .btn-warning {
+      background-color: #ffc107;
+      color: #212529;
+    }
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .form-control {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      width: 50%;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .modal-header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+    .close {
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-success {
+      background-color: #28a745;
+      color: white;
+    }
+    .badge-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    .search-box {
+      margin-bottom: 20px;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body onload="checkLoginStatus()">
+  <div class="container">
+    <!-- Login Form -->
+    <div id="loginForm" style="display: none;">
+      <h2>Admin Login</h2>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password">
+      </div>
+      <button class="btn btn-primary" onclick="login()">Login</button>
+      <p id="loginError" style="color: red; display: none;"></p>
+    </div>
+    
+    <!-- Dashboard Content -->
+    <div id="dashboardContent" style="display: none;">
+    <div class="header">
+      <h1>Admin Dashboard</h1>
+      <div>
+        <span id="adminEmail"></span>
+        <button class="btn btn-primary" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="users">Users</div>
+      <div class="tab" data-tab="online">Online Users</div>
+      <div class="tab" data-tab="storage">Storage Usage</div>
+    </div>
+
+    <!-- Users Tab -->
+    <div class="tab-content active" id="users-tab">
+      <div class="search-box">
+        <input type="text" id="userSearch" placeholder="Search users by email..." />
+      </div>
+      <button class="btn btn-primary" onclick="showCreateUserModal()">Create New User</button>
+      <table id="usersTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- User rows will be populated here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Online Users Tab -->
+    <div class="tab-content" id="online-tab">
+      <table id="onlineUsersTable">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Last Activity</th>
+            <th>IP Address</th>
+            <th>User Agent</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Online user rows will be populated here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Storage Usage Tab -->
+    <div class="tab-content" id="storage-tab">
+      <table id="storageTable">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Files Count</th>
+            <th>Total Storage</th>
+            <th>Last Upload</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Storage usage rows will be populated here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Create User Modal -->
+  <div id="createUserModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Create New User</h2>
+        <span class="close" onclick="closeModal('createUserModal')">&times;</span>
+      </div>
+      <form id="createUserForm">
+        <div class="form-group">
+          <label for="newEmail">Email</label>
+          <input type="email" id="newEmail" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="newPassword">Password</label>
+          <input type="password" id="newPassword" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="newRole">Role</label>
+          <select id="newRole" class="form-control">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Create User</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reset Password Modal -->
+  <div id="resetPasswordModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Reset Password</h2>
+        <span class="close" onclick="closeModal('resetPasswordModal')">&times;</span>
+      </div>
+      <form id="resetPasswordForm">
+        <input type="hidden" id="resetUserId" />
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input type="password" id="resetPassword" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Reset Password</button>
+      </form>
+    </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Check if user is logged in and is admin
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('me.php')
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success || data.role !== 'admin') {
+            window.location.href = 'index.html';
+            return;
+          }
+          document.getElementById('adminEmail').textContent = data.email;
+          loadUsers();
+          loadOnlineUsers();
+          loadStorageUsage();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          window.location.href = 'index.html';
+        });
+
+      // Tab switching
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          document.getElementById(`${this.dataset.tab}-tab`).classList.add('active');
+        });
+      });
+
+      // Search functionality
+      document.getElementById('userSearch').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#usersTable tbody tr');
+        
+        rows.forEach(row => {
+          const email = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+          if (email.includes(searchTerm)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+
+      // Create user form submission
+      document.getElementById('createUserForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('newEmail').value;
+        const password = document.getElementById('newPassword').value;
+        const role = document.getElementById('newRole').value;
+        
+        fetch('admin_create_user.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password, role })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            closeModal('createUserModal');
+            loadUsers();
+          } else {
+            alert(data.error || 'Failed to create user');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while creating the user');
+        });
+      });
+
+      // Reset password form submission
+      document.getElementById('resetPasswordForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const userId = document.getElementById('resetUserId').value;
+        const password = document.getElementById('resetPassword').value;
+        
+        fetch('admin_reset_password.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userId, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            closeModal('resetPasswordModal');
+            alert('Password reset successfully');
+          } else {
+            alert(data.error || 'Failed to reset password');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while resetting the password');
+        });
+      });
+    });
+
+    function loadUsers() {
+      console.log('Loading users...');
+      fetch('admin_list_users.php')
+        .then(response => {
+          console.log('Response status:', response.status);
+          return response.json();
+        })
+        .then(data => {
+          console.log('User data received:', data);
+          if (data.success) {
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = '';
+            
+            data.users.forEach(user => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.email}</td>
+                <td>${user.role}</td>
+                <td>${user.created_at}</td>
+                <td>
+                  <button class="btn btn-warning btn-sm" onclick="showResetPasswordModal(${user.id})">Reset Password</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.id})">Delete</button>
+                </td>
+              `;
+              tbody.appendChild(tr);
+            });
+          } else {
+            console.error('Failed to load users:', data.error);
+            alert(data.error || 'Failed to load users');
+          }
+        })
+        .catch(error => {
+          console.error('Error loading users:', error);
+          alert('An error occurred while loading users');
+        });
+    }
+
+    function loadOnlineUsers() {
+      console.log('Loading online users...');
+      fetch('admin_online_users.php')
+        .then(response => {
+          console.log('Online users response status:', response.status);
+          return response.json();
+        })
+        .then(data => {
+          console.log('Online users data received:', data);
+          if (data.success) {
+            const tbody = document.querySelector('#onlineUsersTable tbody');
+            tbody.innerHTML = '';
+            
+            data.users.forEach(user => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${user.user_email}</td>
+                <td>${user.last_activity}</td>
+                <td>${user.ip_address || 'N/A'}</td>
+                <td>${user.user_agent || 'N/A'}</td>
+              `;
+              tbody.appendChild(tr);
+            });
+          } else {
+            alert(data.error || 'Failed to load online users');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while loading online users');
+        });
+    }
+
+    function loadStorageUsage() {
+      fetch('admin_storage_usage.php')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const tbody = document.querySelector('#storageTable tbody');
+            tbody.innerHTML = '';
+            
+            data.usage.forEach(user => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${user.user_email}</td>
+                <td>${user.file_count}</td>
+                <td>${user.total_size}</td>
+                <td>${user.last_upload || 'N/A'}</td>
+              `;
+              tbody.appendChild(tr);
+            });
+          } else {
+            alert(data.error || 'Failed to load storage usage');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while loading storage usage');
+        });
+    }
+
+    function showCreateUserModal() {
+      document.getElementById('createUserModal').style.display = 'block';
+    }
+
+    function showResetPasswordModal(userId) {
+      document.getElementById('resetUserId').value = userId;
+      document.getElementById('resetPasswordModal').style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    function deleteUser(userId) {
+      if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+        fetch('admin_delete_user.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            loadUsers();
+          } else {
+            alert(data.error || 'Failed to delete user');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while deleting the user');
+        });
+      }
+    }
+
+    function logout() {
+      fetch('logout.php')
+        .then(response => response.json())
+        .then(data => {
+          window.location.href = 'index.html';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          window.location.href = 'index.html';
+        });
+    }
+    
+    function checkLoginStatus() {
+      console.log('Checking login status...');
+      // Check if user is logged in
+      fetch('me.php')
+        .then(response => response.json())
+        .then(data => {
+          console.log('Login status response:', data);
+          if (data.success && data.user && data.user.role === 'admin') {
+            // User is logged in as admin, show dashboard
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+            document.getElementById('adminEmail').textContent = data.user.email;
+            initializeDashboard();
+          } else {
+            // User is not logged in or not admin, show login form
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('dashboardContent').style.display = 'none';
+          }
+        })
+        .catch(error => {
+          console.error('Error checking login status:', error);
+          // Show login form on error
+          document.getElementById('loginForm').style.display = 'block';
+          document.getElementById('dashboardContent').style.display = 'none';
+        });
+    }
+    
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      // Validate input
+      if (!email || !password) {
+        document.getElementById('loginError').textContent = 'Email and password are required';
+        document.getElementById('loginError').style.display = 'block';
+        return;
+      }
+      
+      // Send login request
+      fetch('login.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Login response:', data);
+          if (data.success) {
+            // Login successful, check if admin
+            if (data.role === 'admin') {
+              // Admin login successful, show dashboard
+              document.getElementById('loginForm').style.display = 'none';
+              document.getElementById('dashboardContent').style.display = 'block';
+              document.getElementById('adminEmail').textContent = data.email;
+              initializeDashboard();
+            } else {
+              // Not admin, show error
+              document.getElementById('loginError').textContent = 'Admin access required';
+              document.getElementById('loginError').style.display = 'block';
+            }
+          } else {
+            // Login failed, show error
+            document.getElementById('loginError').textContent = data.error || 'Login failed';
+            document.getElementById('loginError').style.display = 'block';
+          }
+        })
+        .catch(error => {
+          console.error('Error during login:', error);
+          document.getElementById('loginError').textContent = 'An error occurred during login';
+          document.getElementById('loginError').style.display = 'block';
+        });
+    }
+    
+    function initializeDashboard() {
+      console.log('Initializing admin dashboard...');
+      
+      // Load users and online users
+      loadUsers();
+      loadOnlineUsers();
+      
+      // Set up tab switching
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          
+          // Update active tab
+          document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Show active content
+          document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+          document.getElementById(tabId + '-tab').classList.add('active');
+          
+          // Refresh data when switching tabs
+          if (tabId === 'users') loadUsers();
+          if (tabId === 'online') loadOnlineUsers();
+        });
+      });
+    }
+  </script>
+</body>
+</html>
