@@ -1,0 +1,70 @@
+/* Basic reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #222;
+}
+.container {
+  background: #fff;
+  width: min(960px, 94vw);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  padding: 24px;
+  margin: 40px 0;
+}
+.header { margin-bottom: 16px; }
+.header h1 { font-size: 28px; margin-bottom: 6px; }
+.header p { color:#555; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 720px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+}
+label { font-weight: 600; margin-bottom: 6px; display:block; }
+input[type="email"], input[type="password"], input[type="text"], input[type="file"], select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccd;
+  border-radius: 8px;
+  outline: none;
+}
+.btn {
+  display:inline-block;
+  padding: 10px 16px;
+  background: #5b6ee1;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover { filter: brightness(.95); }
+.logout-btn { background: #f04848; }
+
+.row { display:flex; gap:10px; flex-wrap: wrap; }
+
+.card {
+  border: 1px solid #e6e6ee; border-radius: 12px; padding: 12px;
+  display:flex; gap:12px; align-items: center;
+}
+.card .icon { font-size: 28px; width: 36px; text-align:center; }
+.card .meta { flex:1; }
+.card .meta .name { font-weight: 700; }
+.card .meta .sub { color:#666; font-size: 13px; }
+.card .actions { display:flex; gap:8px; }
+
+.hidden { display:none; }
+
+.notice { padding: 10px 12px; border-radius: 10px; margin: 10px 0; }
+.notice.success { background:#e8fff0; border:1px solid #a6efc1; color:#1b7b44; }
+.notice.error { background:#ffecec; border:1px solid #ffbcbf; color:#b00020; }

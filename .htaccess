@@ -1,0 +1,18 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Set default directory index
+DirectoryIndex index.html index.php
+
+# Session security
+php_value session.cookie_httponly 1
+php_value session.cookie_secure 1
+php_value session.cookie_samesite "Lax"
+php_value session.gc_maxlifetime 1800
+php_value session.cookie_lifetime 0
+
+# File upload limits
+php_value upload_max_filesize 50M
+php_value post_max_size 50M
+php_value max_execution_time 300
+php_value memory_limit 256M

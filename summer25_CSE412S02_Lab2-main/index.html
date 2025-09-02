@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>File Repository - Login</title>
+  <link rel="stylesheet" href="./style.css"/>
+
+  <!-- ✅ Modern font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #333;
+    }
+    .header p {
+      color: #666;
+      margin-top: 4px;
+      margin-bottom: 20px;
+    }
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    form label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 4px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .btn {
+      padding: 8px 16px;
+      background: #4a6cf7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: #3a5ce5;
+    }
+    .logout-btn {
+      background: #f44336;
+    }
+    #messageContainer {
+      margin: 15px 0;
+      padding: 10px;
+      border-radius: 6px;
+    }
+    .success-msg { color: green; }
+    .error-msg { color: red; }
+
+    /* Hide/register toggle */
+    .hidden {
+      display: none;
+    }
+    a {
+      color: #4a6cf7;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>File Repository</h1>
+      <p>Login or create an account to manage your files</p>
+    </div>
+
+    <!-- ✅ Messages -->
+    <div id="messageContainer"></div>
+
+    <div class="grid">
+      <!-- Login Form -->
+      <form id="loginForm">
+        <div>
+          <h2>Login</h2>
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required placeholder="your@email.com">
+          
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required placeholder="Your password">
+          
+          <div class="row">
+            <button type="submit" class="btn">Login</button>
+          </div>
+          
+          <p>Don't have an account? <a onclick="toggleAuth()">Register</a></p>
+        </div>
+      </form>
+      
+      <!-- Register Form -->
+      <form id="registerForm" class="hidden">
+        <div>
+          <h2>Register</h2>
+          <label for="registerEmail">Email</label>
+          <input type="email" id="registerEmail" required placeholder="your@email.com">
+          
+          <label for="registerPassword">Password</label>
+          <input type="password" id="registerPassword" required placeholder="Choose a password">
+          
+          <div class="row">
+            <button type="submit" class="btn">Register</button>
+          </div>
+          
+          <p>Already have an account? <a onclick="toggleAuth()">Login</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ✅ Script -->
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const messageContainer = document.getElementById('messageContainer');
+
+    function toggleAuth() {
+      loginForm.classList.toggle('hidden');
+      registerForm.classList.toggle('hidden');
+      messageContainer.innerHTML = '';
+    }
+
+    function showMessage(msg, type = 'success') {
+      messageContainer.innerHTML = `<div class="${type}-msg">${msg}</div>`;
+    }
+
+    // Login form handler
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch('./login.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error ${res.status}`);
+        }
+        
+        const data = await res.json();
+        
+        if (data.ok || data.success) {
+          showMessage('Login successful! Redirecting...', 'success');
+          
+          // Store login info in localStorage/sessionStorage
+          localStorage.setItem('userEmail', data.email || email);
+          localStorage.setItem('userRole', data.role || 'user');
+          
+          // Redirect after a delay
+          setTimeout(() => {
+            window.location.href = './files.html';
+          }, 2000);
+        } else {
+          showMessage(data.error || 'Login failed', 'error');
+        }
+      } catch (err) {
+        showMessage(`Network error: ${err.message}`, 'error');
+      }
+    });
+
+    // Register form handler
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+
+      try {
+        const res = await fetch('./register.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error ${res.status}`);
+        }
+        
+        const data = await res.json();
+        
+        if (data.ok || data.success) {
+          showMessage('Registration successful! You can now log in.', 'success');
+          toggleAuth(); // Switch to login form
+        } else {
+          showMessage(data.error || 'Registration failed', 'error');
+        }
+      } catch (err) {
+        showMessage(`Network error: ${err.message}`, 'error');
+      }
+    });
+  </script>
+</body>
+</html>

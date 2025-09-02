@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload File</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Upload File</h1>
+      <p id="welcomeMessage">Welcome back!</p>
+    </div>
+
+    <div id="messageContainer"></div>
+
+    <!-- File Upload Form -->
+    <form id="fileUploadForm">
+      <div class="form-group">
+        <label for="fileName">File Name</label>
+        <input type="text" id="fileName" name="fileName" required />
+      </div>
+      <div class="form-group">
+        <label for="fileInput">Choose File</label>
+        <input type="file" id="fileInput" name="file" accept="image/*,.txt,.pdf,.doc,.docx" required />
+      </div>
+      <button type="submit" class="btn">Upload File</button>
+    </form>
+
+    <div style="margin-top: 15px;">
+      <a href="files.html" class="btn">View Files</a>
+      <button class="btn logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

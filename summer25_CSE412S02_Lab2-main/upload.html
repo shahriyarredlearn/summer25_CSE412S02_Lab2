@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload File</title>
+  <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Upload File</h1>
+      <p id="welcomeMessage">Welcome!</p>
+    </div>
+
+    <div id="messageContainer"></div>
+
+    <form id="fileUploadForm">
+      <label for="fileInput">Choose a file (max 10MB):</label>
+      <input type="file" id="fileInput" name="file" accept="image/*,.txt,.pdf,.doc,.docx,.xls,.xlsx,.zip,.rar" required />
+      <div class="row" style="margin-top:10px">
+        <button type="submit" class="btn">Upload</button>
+        <a href="./files.html" class="btn">My Files</a>
+        <button type="button" class="btn logout-btn" onclick="logout()">Logout</button>
+      </div>
+      <div id="progressWrap" class="hidden" style="margin-top:10px">
+        <div id="progressText" class="sub">0%</div>
+        <progress id="progressBar" value="0" max="100" style="width:100%"></progress>
+      </div>
+    </form>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
