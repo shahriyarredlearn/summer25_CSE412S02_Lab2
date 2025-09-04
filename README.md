@@ -62,9 +62,17 @@ Visual feedback with a real-time **progress bar**:
 
 The diagrams were created with **draw.io** (source files included).
 
+### Use Case Diagram
+![Use Case Diagram](./diagrams/use_case_diagram.png)
+<small>Figure 1: Use Case Diagram (created using draw.io)</small>
+
+[Download Component_diagram.drawio (editable source)](./diagrams/UML_Use_Case_diagram.drawio)
+
+---
+
 ### Component Diagram
 ![Component Diagram](./diagrams/Component_diagram.png)
-<small>Figure 1: Component Diagram (created using draw.io)</small>
+<small>Figure 2: Component Diagram (created using draw.io)</small>
 
 [Download Component_diagram.drawio (editable source)](./diagrams/UML_Component_Diagram.drawio)
 
@@ -72,7 +80,7 @@ The diagrams were created with **draw.io** (source files included).
 
 ### Work Breakdown Structure (WBS)
 ![WBS Diagram](./diagrams/Work_Breakdown_Structure.png)
-<small>Figure 2: Work Breakdown Structure (created using draw.io)</small>
+<small>Figure 3: Work Breakdown Structure (created using draw.io)</small>
 
 [Download WBS_diagram.drawio (editable source)](./diagrams/Work_Breakdown_Structure_diagram.drawio)
 
