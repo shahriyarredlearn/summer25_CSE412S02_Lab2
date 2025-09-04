@@ -55,7 +55,7 @@ async function refreshMe() {
       if (onProtected) location.href = './index.html';
     }
   } catch (e) {
-    console.error(e);
+    // Silent error handling
   }
 }
 

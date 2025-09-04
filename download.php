@@ -1,51 +1,66 @@
 <?php
-// api/download.php
-require_once __DIR__ . '/../config/app.php';
-
-// Ensure user is logged in
-$email = require_login();
-
-// Validate file ID
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if ($id <= 0) {
-    json_response(false, ['error' => 'Invalid file ID'], 400);
-}
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/auth.php';
 
 try {
+    // Check if user is logged in
+    if (!is_logged_in()) {
+        json_error('Authentication required', 401);
+    }
+    
+    // Check if session is valid
+    if (!is_session_valid()) {
+        json_error('Session expired or invalid', 401);
+    }
+    
+    $userEmail = $_SESSION['user_email'];
+    $isAdmin = is_admin();
+    
+    // Get file ID from request
+    $fileId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    
+    if ($fileId <= 0) {
+        json_error('Valid file ID is required', 400);
+    }
+    
     $pdo = db();
-
-    // Fetch file info
-    $stmt = $pdo->prepare(
-        'SELECT stored_name, original_name, file_type 
-         FROM user_files 
-         WHERE id = ? AND user_email = ?'
-    );
-    $stmt->execute([$id, $email]);
-    $f = $stmt->fetch();
-
-    if (!$f) {
-        json_response(false, ['error' => 'File not found'], 404);
+    
+    // Get file information
+    $stmt = $pdo->prepare('SELECT * FROM user_files WHERE id = ? AND is_deleted = 0');
+    $stmt->execute([$fileId]);
+    $file = $stmt->fetch();
+    
+    if (!$file) {
+        json_error('File not found', 404);
     }
-
-    $path = realpath(__DIR__ . '/../uploads/' . $f['stored_name']);
-    if (!$path || !is_file($path)) {
-        log_error("Download failed: file missing ({$f['stored_name']}) for user {$email}");
-        json_response(false, ['error' => 'File missing'], 404);
+    
+    // Check if user has permission to download this file
+    if (!$isAdmin && $file['user_email'] !== $userEmail) {
+        json_error('You do not have permission to download this file', 403);
     }
-
-    // Send headers for download
-    header('Content-Description: File Transfer');
-    header('Content-Type: ' . $f['file_type']);
-    header('Content-Disposition: attachment; filename="' . basename($f['original_name']) . '"');
-    header('Content-Length: ' . filesize($path));
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-
-    // Stream file to output
-    readfile($path);
+    
+    // Check if file exists on disk
+    $filePath = __DIR__ . '/uploads/' . $file['stored_name'];
+    if (!file_exists($filePath)) {
+        json_error('File not found on server', 404);
+    }
+    
+    // Update session activity
+    update_session_activity();
+    
+    // Set headers for file download
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename="' . $file['original_name'] . '"');
+    header('Content-Length: ' . $file['file_size']);
+    header('Cache-Control: no-cache, must-revalidate');
+    header('Pragma: no-cache');
+    
+    // Output file content
+    readfile($filePath);
     exit;
-
+    
 } catch (Exception $e) {
-    log_error("Download error (id={$id}, user={$email}): " . $e->getMessage());
-    json_response(false, ['error' => 'Internal server error'], 500);
+    error_log("Download error: " . $e->getMessage());
+    json_error('An error occurred while downloading the file', 500);
 }
+?>

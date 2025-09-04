@@ -1,40 +1,32 @@
 <?php
-// config/init_db.php
-require_once __DIR__ . '/app.php'; // uses db(), json_response(), log_error()
+/**
+ * Database Initialization Script
+ * -----------------------------
+ * This script initializes the database for the file manager system.
+ * It creates the necessary tables and sets up a default admin user.
+ */
+
+require_once __DIR__ . '/config/database.php';
+
+echo "Starting database initialization...\n";
 
 try {
-    $pdo = db();
-
-    // ✅ Users table
-    $pdo->exec(<<<SQL
-        CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            email VARCHAR(255) NOT NULL UNIQUE,
-            password_hash VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-    SQL
-    );
-
-    // ✅ User files table
-    $pdo->exec(<<<SQL
-        CREATE TABLE IF NOT EXISTS user_files (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            user_email VARCHAR(255) NOT NULL,
-            stored_name VARCHAR(255) NOT NULL,
-            original_name VARCHAR(255) NOT NULL,
-            file_type VARCHAR(100) NOT NULL,
-            file_size BIGINT NOT NULL,
-            upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            INDEX(user_email)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-    SQL
-    );
-
-    // Optional: return JSON
-    json_response(true, ['message' => 'Database tables ensured']);
-
-} catch (Throwable $e) {
-    log_error("DB Init Error: " . $e->getMessage());
-    json_response(false, ['error' => 'Database initialization failed'], 500);
+    // Create database if it doesn't exist
+    $pdo = new PDO("mysql:host=" . DB_HOST, DB_USERNAME, DB_PASSWORD);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS " . DB_NAME . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+    echo "✅ Database '" . DB_NAME . "' created or already exists.\n";
+    
+    // Initialize tables
+    initializeDatabase();
+    
+    echo "\n✅ Database initialization completed successfully!\n";
+    echo "\nDefault admin credentials:\n";
+    echo "Email: admin@example.com\n";
+    echo "Password: Admin123\n";
+    echo "\nPlease change these credentials after first login.\n";
+    
+} catch (PDOException $e) {
+    echo "❌ Database initialization failed: " . $e->getMessage() . "\n";
 }

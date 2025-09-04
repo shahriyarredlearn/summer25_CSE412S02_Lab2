@@ -1,43 +1,83 @@
 <?php
-// api/upload.php
-require_once __DIR__ . '/../config/database.php';
-$email = require_login();
+header('Content-Type: application/json');
+error_reporting(0);
+ini_set('display_errors', 0);
 
-// Ensure uploads dir
-$uploadsDir = realpath(__DIR__ . '/../uploads');
-if ($uploadsDir === false) {
-    json_error('Uploads directory missing on server', 500);
+try {
+    require_once __DIR__ . '/config/database.php';
+    start_app_session();
+    
+    // Check authentication
+    if (!isset($_SESSION['user_id'])) {
+        echo json_encode(['ok' => false, 'error' => 'Please login first']);
+        exit;
+    }
+    
+    // Check if file was uploaded
+    if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+        echo json_encode(['ok' => false, 'error' => 'No file uploaded or upload error']);
+        exit;
+    }
+    
+    $file = $_FILES['file'];
+    $userEmail = $_SESSION['user_email'] ?? 'unknown';
+    
+    // Validate file size (max 10MB)
+    if ($file['size'] > 10 * 1024 * 1024) {
+        echo json_encode(['ok' => false, 'error' => 'File too large (max 10MB)']);
+        exit;
+    }
+    
+    // Create uploads directory
+    $uploadDir = __DIR__ . '/uploads/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+    
+    // Generate unique filename
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $storedName = uniqid('file_', true) . '.' . $extension;
+    $filePath = $uploadDir . $storedName;
+    
+    // Move uploaded file
+    if (!move_uploaded_file($file['tmp_name'], $filePath)) {
+        echo json_encode(['ok' => false, 'error' => 'Failed to save file']);
+        exit;
+    }
+    
+    // Save to database
+    $pdo = db();
+    $stmt = $pdo->prepare("
+        INSERT INTO user_files (user_email, stored_name, original_name, file_type, file_size, is_deleted) 
+        VALUES (?, ?, ?, ?, ?, 0)
+    ");
+    
+    $success = $stmt->execute([
+        $userEmail,
+        $storedName,
+        $file['name'],
+        $file['type'],
+        $file['size']
+    ]);
+    
+    if ($success) {
+        echo json_encode([
+            'ok' => true, 
+            'message' => 'File uploaded successfully',
+            'file' => [
+                'name' => $file['name'],
+                'size' => $file['size'],
+                'type' => $file['type']
+            ]
+        ]);
+    } else {
+        // Delete the uploaded file if database insert failed
+        unlink($filePath);
+        echo json_encode(['ok' => false, 'error' => 'Failed to save file info to database']);
+    }
+    
+} catch (Exception $e) {
+    error_log("Upload error: " . $e->getMessage());
+    echo json_encode(['ok' => false, 'error' => 'Upload failed: ' . $e->getMessage()]);
 }
-
-if (!isset($_FILES['file'])) json_error('No file uploaded');
-
-$file = $_FILES['file'];
-if ($file['error'] !== UPLOAD_ERR_OK) json_error('Upload error code: ' . $file['error'], 400);
-
-// Validate type/size
-$allowedExts = ['pdf','jpg','jpeg','png','gif','doc','docx','xls','xlsx','txt','zip','rar'];
-$maxBytes = 10 * 1024 * 1024; // 10MB
-if ($file['size'] > $maxBytes) json_error('File too large (max 10MB)');
-
-$orig = $file['name'];
-$ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
-if (!in_array($ext, $allowedExts, true)) json_error('File type not allowed');
-
-$mime = mime_content_type($file['tmp_name']) ?: ($file['type'] ?: 'application/octet-stream');
-
-// Generate stored name
-$rand = bin2hex(random_bytes(16));
-$stored = $rand . '.' . $ext;
-$dest = $uploadsDir . DIRECTORY_SEPARATOR . $stored;
-
-// Move
-if (!move_uploaded_file($file['tmp_name'], $dest)) {
-    json_error('Failed to save file on server', 500);
-}
-
-// Save DB row
-$pdo = db();
-$stmt = $pdo->prepare('INSERT INTO user_files (user_email, stored_name, original_name, file_type, file_size) VALUES (?, ?, ?, ?, ?)');
-$stmt->execute([$email, $stored, $orig, $mime, (int)$file['size']]);
-
-json_ok(['message' => 'Uploaded', 'id' => $pdo->lastInsertId()]);
+?>

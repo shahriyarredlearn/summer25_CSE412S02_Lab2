@@ -1,29 +1,26 @@
 <?php
-// api/logout.php
-require_once __DIR__ . '/../config/app.php';
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/auth.php';
 
 try {
-    start_app_session();
-
-    // Clear all session data
-    $_SESSION = [];
-
-    // Destroy session cookie
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
-    }
-
-    // Destroy the session
-    session_destroy();
-
-    // Regenerate session ID for safety
-    session_start();
-    session_regenerate_id(true);
-
-    json_response(true, ['message' => 'Logged out successfully']);
-
+    // End user session and remove from tracking
+    end_user_session();
+    
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => true,
+        'ok' => true,
+        'message' => 'Logged out successfully'
+    ]);
+    exit;
 } catch (Exception $e) {
-    log_error("Logout Error: " . $e->getMessage());
-    json_response(false, ['error' => 'Logout failed'], 500);
+    error_log("Logout error: " . $e->getMessage());
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'error' => 'An error occurred during logout'
+    ]);
+    http_response_code(500);
+    exit;
 }
+?>
